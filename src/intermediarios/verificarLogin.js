@@ -25,7 +25,7 @@ const verificarLogin = async (req, res, next) => {
 
         const { senha:_, ...usuario} = rows[0];
 
-        req.usuario = usuario.id;
+        req.usuario = usuario;
         
         next();
     } catch (error) {
