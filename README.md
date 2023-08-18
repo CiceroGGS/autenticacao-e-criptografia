@@ -86,17 +86,17 @@ com a biblioteca `jsonwebtoken`.
 #### **Exemplo de requisição**
 ``` javascript
 {
-    "email": "emailDoUsuario",
-    "senha": "senhaDoUsuario"
+    "email": "cicero@gmail.com",
+    "senha": "abc123"
 }
 ```
 #### **Exemplos de resposta em caso de sucesso**
 ``` javascript
 {
 	"usuario": {
-		"id": 6,
-		"nome": "Caio",
-		"email": "Caio@gmail.com"
+		"id": 1,
+		"nome": "cicero",
+		"email": "cicer@gmail.com"
 	},
 	"token": "gerado pela biblioteca `jsonwebtoken`"
 }
@@ -109,7 +109,7 @@ com a biblioteca `jsonwebtoken`.
 }
 ```
 
-Para a entidade `pokemons` foram implementados as seguintes funcionalidades.
+## Para a entidade `pokemons` foram implementados as seguintes funcionalidades.
 
 a) Cadastro do pokemons
 
