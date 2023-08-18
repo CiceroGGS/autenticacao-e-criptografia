@@ -1,11 +1,13 @@
 ## API de cadastro de jogadores e pokemons com autenticação e criptografia
 
 Essa API tem como principal objetivo cadastrar usuarios e pokemons dentro de um banco de dados,
-porem para cadastrar ons  **Pokemons** o usuario deve estar logado
+porem para cadastrar os  **Pokemons** o usuario deve estar logado.
+
+###### bibliotecas utilizadas: `bcrypt` `express` `jsonwebtoken` `pg`
 
 ## **Banco de dados**
 
-Neste projeto foi criado um bando de dados  PostgreSQL chamado `catalogo_pokemons` contendo as seguintes tabelas e colunas:  
+Neste projeto foi criado um bando de dados PostgreSQL chamado `catalogo_pokemons` contendo as seguintes tabelas e colunas:  
 
 1) Tabela `usuarios` com os campos:
 
@@ -32,13 +34,11 @@ O corpo(body) devera receber os as seguintes propriedades em formato JSON, lembr
 a senha do usuario foi criptografada usando a biblioteca `bcrypt`.
 (Todos os campos são obrigatorios e o email e um campo unico ou seja para cada email existira apenas um usuario).
 
-
 ##### Login de usuário
 
 Essa é a entidade que permite o usuario cadastrado realizar o login no sistem ela validar
 as credenciais do usuário usando a biblioteca `bcrypt`e Gerar o token de autenticação
 com a biblioteca `jsonwebtoken`.
-
 
 ## **Endpoint**
 
@@ -49,7 +49,6 @@ com a biblioteca `jsonwebtoken`.
     -   nome
     -   email
     -   senha
-
 
 #### **Exemplo de requisição**
 ``` javascript
@@ -72,7 +71,7 @@ com a biblioteca `jsonwebtoken`.
 ```javascript
 // HTTP Status code apropriado exemplo: 400 / 401 / 403 / 404 \\
 {
-    "mensagem": "Já existe usuário cadastrado com o e-mail informado."
+    "mensagem": "Mensagem da falha."
 }
 ```
 
@@ -81,17 +80,8 @@ com a biblioteca `jsonwebtoken`.
 ### **Login do usuário**
 
 #### `POST` `/login`
-
-
-**Requisição** 
-
-
-Essa é a rota que será utilizada para logar o usuario no sistema
-O corpo(body) devera receber os as seguintes propriedades em formato JSON:
-
+    -   nome
     -   email
-    -   senha
-
     
 #### **Exemplo de requisição**
 ``` javascript
@@ -100,35 +90,49 @@ O corpo(body) devera receber os as seguintes propriedades em formato JSON:
     "senha": "senhaDoUsuario"
 }
 ```
-
 #### **Exemplos de resposta em caso de sucesso**
 ``` javascript
 {
-	"id": 6,
-	"nome": "Caio",
-	"email": "Caio@gmail.com"
+	"usuario": {
+		"id": 6,
+		"nome": "Caio",
+		"email": "Caio@gmail.com"
+	},
+	"token": "gerado pela biblioteca `jsonwebtoken`"
 }
 ```
 #### **Exemplos de resposta em caso de falha**
 ```javascript
 // HTTP Status code apropriado exemplo: 400 / 401 / 403 / 404 \\
 {
-    "mensagem": "Já existe usuário cadastrado com o e-mail informado."
+    "mensagem": "Mensagem da falha."
 }
 ```
+
+Para a entidade `pokemons` foram implementados as seguintes funcionalidades.
+
+a) Cadastro do pokemons
+
+b) Atualização apenas do apelido do pokemon
+
+c) Listagem completa dos pokemons
+
+d) Listagem de apenas um pokemon filtrado pelo seu id
+
+e) Exclusão do pokemon
 
 
 ## **Endpoint**
 
-### **Cadastrar pokemon**
+### ** A) Cadastrar pokemon**
 
 #### `POST` `/pokemon`
 
 Ja com o usuario logado, apos receber o token do header da requisição (_authorization_) no formato `Bearer Token`
-devem ser enviadas as informações no body da requisição no seguinte padrão
+devem ser enviadas as informações no body da requisição no seguinte padrão.
 
 **Requisição** 
-```
+```javascript
 {
     "nome": "Nome do pokemon",
     "apelido": "Apleido do pokemon",
@@ -136,10 +140,11 @@ devem ser enviadas as informações no body da requisição no seguinte padrão
     "imagem": "endereço https da imagem"
 }
 ```
+
 **Resposta** 
 Sera retornado uma listagem de pokemons para o usuario logado:
 
-```
+```javascript
 [
     {
         "id": 1,
@@ -147,7 +152,7 @@ Sera retornado uma listagem de pokemons para o usuario logado:
         "nome": " Blastoise ",
         "apelido": " Blastoise ",
         "habilidades": ["habiliade 1", "habiliade 2"],
-        "imagem": "Foto do  Blastoise "
+        "imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/009.png"
     },
     {
         "id": 2,
@@ -155,9 +160,172 @@ Sera retornado uma listagem de pokemons para o usuario logado:
         "nome": "Charizard",
         "apelido": "Charizard",
         "habilidades": ["habiliade 1", "habiliade 2", "habiliade 3"],
-        "imagem": "Foto do Charizard"
+        "imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png"
     }
 ]
+```
+
+## **Endpoint**
+
+### ** B) Atualizar apelido pokemon**
+
+#### `PATCH` `/pokemon/:id`
+
+Essa é a rota que será chamada quando o usuário quiser alterar o apelido de seu pokemon ja com
+o usuário é  identificado através do ID presente no token de autenticação o pokemon e identificado através
+do ID passado como parametro de rota
+
+#### **Exemplo de requisição**
+
+```javascript
+{
+    "apelido": "apelido_a_ser_atualizado"
+}
+```
+
+#### **Exemplos de resposta em caso de sucesso**
+
+```
+Em caso de sucesso não e retornado nada no corpo(body) apenas o status code 204( No Content)
+```
+
+#### **Exemplos de resposta em caso de falha**
+
+```javascript
+// HTTP Status code apropriado exemplo: 400 / 401 / 403 / 404 \\
+{
+	"mensagem": "Pokemon não existe! "
+}
+```
+
+
+## **Endpoint**
+
+### ** C) Listagem completa dos pokemons**
+
+#### `GET` `/pokemon`
+
+Essa é a rota que será chamada quando o usuário quiser realizar a listagem de todos os seus pokemons
+ja com o usuário é  identificado através do ID presente no token de autenticação.
+
+#### **Exemplo de requisição**
+
+```javascript
+{
+    "Sem corpo(body)"
+}
+```
+
+#### **Exemplos de resposta em caso de sucesso quando usuario possuir pokemons cadastrados**
+
+```
+[
+	{
+		"id": 1,
+		"nome": "Charizard",   
+		"habilidades": [
+			"habilidade 1",
+			"habilidade 2"
+		],
+		"apelido": "Fogo Quente",
+		"imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png",
+		"usuario": "Cicero"
+	},
+	{
+		"id": 2,
+		"nome": "Blastoise",
+		"habilidades": [
+			"habilidade 1",
+			"habilidade 2"
+		],
+		"apelido": "blastoisao",
+		"imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/009.png",
+		"usuario": "Cicero"
+	},
+[
+```
+#### **Exemplos de resposta em caso usuario nao tenha nem um pokemon**
+```javascript
+// Array vazio com status code (200) \\
+{
+	[]
+}
+```
+
+
+## **Endpoint**
+
+### ** D) Listagem de apenas um pokemon filtrado pelo seu id**
+
+#### `GET` `/pokemon/:id`
+
+Essa é a rota que será chamada quando o usuário quiser realizar a listagem de apenas um de seus pokemons,
+ja com o usuário é  identificado através do ID presente no token de autenticação o pokemon e identificado através
+do ID passado como parametro de rota
+
+#### **Exemplo de requisição**
+
+```javascript
+{
+    "http://servidor:porta/pokemon/1"
+}
+```
+
+#### **Exemplos de resposta em caso de sucesso quando usuario possuir o pokemon com id informado**
+```
+[
+	{
+		"id": 1,
+		"nome": "Charizard",   
+		"habilidades": [
+			"habilidade 1",
+			"habilidade 2"
+		],
+		"apelido": "Fogo Quente",
+		"imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png",
+		"usuario": "Cicero"
+	},
+[
+```
+#### **Exemplos de resposta em quando usuario não possuir o pokemon com id informado**
+
+```javascript
+// HTTP Status code:  404 \\
+{
+	"mensagem": "Pokemon não existe! "
+}
+```
+
+
+## **Endpoint**
+
+### ** E) Exclusão do pokemon pelo seu Id**
+
+#### `DELETE` `/pokemon/:id`
+
+Essa é a rota que será chamada quando o usuário quiser realizar a exclusão de um de seus pokemons,
+ja com o usuário é  identificado através do ID presente no token de autenticação o pokemon e identificado através
+do ID passado como parametro de rota
+
+#### **Exemplo de requisição**
+
+```javascript
+{
+    "Sem corpo(body)"
+}
+```
+
+#### **Exemplos de resposta em caso de sucesso**
+```
+Em caso de sucesso não e retornado nada no corpo(body) apenas o status code 204( No Content) indicando que o pokemon foi excluido
+```
+
+#### **Exemplos de resposta em quando usuario não possuir o pokemon com id informado**
+```javascript
+// HTTP Status code:  404 
+{
+	"mensagem": "Pokemon não existe! "
+}
 ```
 
 
