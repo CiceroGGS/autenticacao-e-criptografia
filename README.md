@@ -109,6 +109,8 @@ com a biblioteca `jsonwebtoken`.
 }
 ```
 
+
+
 ## Para a entidade `pokemons` foram implementados as seguintes funcionalidades.
 
 a) Cadastro do pokemons
@@ -134,10 +136,10 @@ devem ser enviadas as informações no body da requisição no seguinte padrão.
 **Requisição** 
 ```javascript
 {
-    "nome": "Nome do pokemon",
-    "apelido": "Apleido do pokemon",
-    "habilidades": "Lista das habilidades",
-    "imagem": "endereço https da imagem"
+    "nome": "Charizard",
+    "apelido": "Fogo Quente",
+    "habilidades": "habiliade 1, habiliade 2",
+    "imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/009.png"
 }
 ```
 
@@ -149,18 +151,10 @@ Sera retornado uma listagem de pokemons para o usuario logado:
     {
         "id": 1,
         "usuario": "Nome do usuário responsável"
-        "nome": " Blastoise ",
-        "apelido": " Blastoise ",
+        "nome": "Charizard",
+        "apelido": "Fogo Quente",
         "habilidades": ["habiliade 1", "habiliade 2"],
         "imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/009.png"
-    },
-    {
-        "id": 2,
-        "usuario": "Nome do usuário responsável"
-        "nome": "Charizard",
-        "apelido": "Charizard",
-        "habilidades": ["habiliade 1", "habiliade 2", "habiliade 3"],
-        "imagem": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png"
     }
 ]
 ```
@@ -179,14 +173,14 @@ do ID passado como parametro de rota
 
 ```javascript
 {
-    "apelido": "apelido_a_ser_atualizado"
+    "apelido": "novo_apelido"
 }
 ```
 
 #### **Exemplos de resposta em caso de sucesso**
 
 ```
-Em caso de sucesso não e retornado nada no corpo(body) apenas o status code 204( No Content)
+Em caso de sucesso não e retornado nada no corpo(body) apenas o status code 204(No Content) indicando que o apelido foi atualizado
 ```
 
 #### **Exemplos de resposta em caso de falha**
@@ -194,7 +188,7 @@ Em caso de sucesso não e retornado nada no corpo(body) apenas o status code 204
 ```javascript
 // HTTP Status code apropriado exemplo: 400 / 401 / 403 / 404 \\
 {
-	"mensagem": "Pokemon não existe! "
+    "mensagem": "Mensagem da falha."
 }
 ```
 
@@ -211,9 +205,7 @@ ja com o usuário é  identificado através do ID presente no token de autentica
 #### **Exemplo de requisição**
 
 ```javascript
-{
     "Sem corpo(body)"
-}
 ```
 
 #### **Exemplos de resposta em caso de sucesso quando usuario possuir pokemons cadastrados**
@@ -245,6 +237,7 @@ ja com o usuário é  identificado através do ID presente no token de autentica
 [
 ```
 #### **Exemplos de resposta em caso usuario nao tenha nem um pokemon**
+
 ```javascript
 // Array vazio com status code (200) \\
 {
@@ -310,9 +303,9 @@ do ID passado como parametro de rota
 #### **Exemplo de requisição**
 
 ```javascript
-{
+
     "Sem corpo(body)"
-}
+
 ```
 
 #### **Exemplos de resposta em caso de sucesso**
